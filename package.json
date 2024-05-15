@@ -28,7 +28,7 @@
     "build": "svag-ts build",
     "start": "svag-ts start",
     "lint": "svag-lint lint",
-    "test": "jest",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -40,11 +40,11 @@
     "jest": "30.0.0-alpha.4",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.7",
-    "svag-husky": "^0.1.29",
-    "svag-jest": "^0.1.30",
-    "svag-lint": "^0.1.52",
-    "svag-prettier": "^0.1.43",
-    "svag-ts": "^0.1.48",
+    "svag-husky": "^0.1.31",
+    "svag-jest": "^0.1.32",
+    "svag-lint": "^0.1.54",
+    "svag-prettier": "^0.1.45",
+    "svag-ts": "^0.1.50",
     "ts-jest": "^29.1.2",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.4.5"
