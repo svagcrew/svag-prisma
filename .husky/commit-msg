@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sh "$(npm root)/svag-husky/hooks/commit-msg" "$@"

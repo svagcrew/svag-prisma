@@ -1,0 +1,9 @@
+{
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "eslint.experimental.useFlatConfig": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative"
+}

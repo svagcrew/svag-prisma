@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pnpm test
+pnpm lint --fix
+pnpm types
