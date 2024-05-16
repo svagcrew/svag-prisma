@@ -17,7 +17,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "main": "./dist/index.js",
   "files": [
+    "./src/**/*",
     "./dist/**/*"
   ],
   "scripts": {
@@ -29,6 +31,7 @@
     "start": "svag-ts start",
     "lint": "svag-lint lint",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "pgc": "prisma generate",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -40,14 +43,20 @@
     "jest": "30.0.0-alpha.4",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.7",
-    "svag-husky": "^0.1.31",
-    "svag-jest": "^0.1.32",
-    "svag-lint": "^0.1.54",
-    "svag-prettier": "^0.1.45",
-    "svag-ts": "^0.1.50",
+    "svag-husky": "^0.1.35",
+    "svag-jest": "^0.1.33",
+    "svag-lint": "^0.1.58",
+    "svag-prettier": "^0.1.49",
+    "svag-ts": "^0.1.54",
     "ts-jest": "^29.1.2",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.4.5"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "exponential-backoff": "^3.1.1",
+    "prisma": "^5.14.0",
+    "prisma-json-types-generator": "^3.0.4"
+  }
 }
