@@ -22,6 +22,9 @@ devDependencies:
   '@types/jest':
     specifier: ^29.5.12
     version: 29.5.12
+  '@types/node':
+    specifier: ^20.12.12
+    version: 20.12.12
   concurrently:
     specifier: ^8.2.2
     version: 8.2.2

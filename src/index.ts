@@ -1,61 +1,53 @@
-/* eslint-disable prefer-spread */
+/* eslint-disable @typescript-eslint/ban-types, prefer-spread */
 
-// import type { Prisma, PrismaClient } from '@prisma/client'
 // WE CAN NOT IMPORT IT. IT IS LIB PACKAGE, NOT A PROJECT PACKAGE
+// JUST UNCOMMENT TO CHECK TYPES
+// import type { Prisma, PrismaClient } from '@prisma/client'
 import { type IBackOffOptions, backOff } from 'exponential-backoff'
 
-// type LikePrismaClient = {
-//   $executeRawUnsafe: (query: string) => Promise<any>
-//   $on: (event: 'query' | 'info' | 'warn' | 'error', cb: (event: any) => any) => any
-//   $transaction: <T>(input: any, options?: any) => Promise<T>
-//   $extends: (
-//     props:
-//       | {
-//           query: {
-//             $allModels: {
-//               $allOperations: (props: { model: string; operation: string; args: any; query: (args: any) => any }) => any
-//             }
-//           }
-//         }
-//       | { client: { $transaction: any } }
-//   ) => any
-// }
-// type LikePrisma = {
-//   defineExtension: (callback: (prisma: LikePrismaClient) => any) => any
-//   TransactionIsolationLevel: {
-//     Serializable: 'Serializable'
-//   }
-// }
-// type LikePrismaClientConstructor<T extends LikePrismaClient> = new (options?: any) => T
-
-// export const createPrismaThings = <TPrisma extends typeof Prisma, TPrismaClient extends typeof PrismaClient>({
+// JUST UNCOMMENT TO CHECK TYPES
 // export const createPrismaThings = <
-//   TPrisma extends LikePrisma,
-//   TPrismaClient extends LikePrismaClientConstructor<LikePrismaClient>,
+//   TPrisma extends typeof Prisma,
+//   TPrismaClient extends typeof PrismaClient,
+//   TEnv extends Record<string, any> | undefined,
 // >({
-export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (...args: any) => any>({
-  env,
-  logger,
+export const createPrismaThings = <
+  TPrisma,
+  TPrismaClient extends abstract new (...args: any) => any,
+  TEnv extends Record<string, any> | undefined,
+>({
   Prisma,
   PrismaClient,
+  env,
+  logger = console,
+  overridePrismaClientOptions = {},
+  isTestDatabase = (env) => env?.HOST_ENV === 'test' && env?.DATABASE_URL?.includes('-test'),
+  logQueryParams = (env) => env?.HOST_ENV === 'local',
 }: {
-  env: { HOST_ENV: string; DATABASE_URL: string }
-  logger: { info: (props: any) => any; error: (props: any) => any }
   Prisma: TPrisma
   PrismaClient: TPrismaClient
+  env?: TEnv
+  logger?: { info: (props: any) => any; error: (props: any) => any }
+  overridePrismaClientOptions?: ConstructorParameters<TPrismaClient>[0]
+  isTestDatabase?: (env: TEnv) => boolean
+  logQueryParams?: (env: TEnv) => boolean
 }) => {
-  const isTestDatabase = () => {
-    return env.HOST_ENV === 'test' && env.DATABASE_URL.endsWith('-test')
-  }
+  // JUST UNCOMMENT TO CHECK TYPES
+  // const PrismaInternal = Prisma
+  const PrismaInternal = Prisma as any
+  // JUST UNCOMMENT TO CHECK TYPES
+  // const PrismaClientInternal = PrismaClient
+  const PrismaClientInternal = PrismaClient as any
+  type PrismaClientInstanceInternal = ReturnType<typeof createPrismaClient>
 
-  const getAllPrismaModelsNames = (prisma: InstanceType<TPrismaClient>) => {
+  const getAllPrismaModelsNames = (prisma: PrismaClientInstanceInternal) => {
     return Object.keys(prisma)
       .filter((modelName) => !modelName.startsWith('_') && !modelName.startsWith('$'))
       .map((modelName) => modelName.charAt(0).toUpperCase() + modelName.slice(1))
   }
 
-  const setFakeCreatedAtForAllRecords = async (prisma: InstanceType<TPrismaClient>, now?: Date) => {
-    if (!isTestDatabase()) {
+  const setFakeCreatedAtForAllRecords = async (prisma: PrismaClientInstanceInternal, now?: Date) => {
+    if (!isTestDatabase(env as any)) {
       return
     }
     const modelsNames = getAllPrismaModelsNames(prisma)
@@ -87,7 +79,7 @@ export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (
   }
 
   function RetryTransactions(options?: Partial<IBackOffOptions>) {
-    return (Prisma as any).defineExtension((prisma: any) =>
+    return PrismaInternal.defineExtension((prisma: any) =>
       prisma.$extends({
         client: {
           $transaction(...args: any) {
@@ -106,11 +98,11 @@ export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (
   }
 
   const createPrismaClient = () => {
-    const prisma = new (PrismaClient as any)({
+    const prisma = new PrismaClientInternal({
       transactionOptions: {
         maxWait: 10000,
         timeout: 10000,
-        isolationLevel: (Prisma as any).TransactionIsolationLevel.Serializable,
+        isolationLevel: PrismaInternal.TransactionIsolationLevel.Serializable,
       },
       log: [
         {
@@ -122,6 +114,7 @@ export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (
           level: 'info',
         },
       ],
+      ...(overridePrismaClientOptions as {}),
     })
 
     prisma.$on('query', (e: any) => {
@@ -131,7 +124,7 @@ export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (
         meta: {
           query: e.query,
           duration: e.duration,
-          params: env.HOST_ENV === 'local' ? e.params : '***',
+          params: logQueryParams(env as any) ? e.params : '***',
         },
       })
     })
@@ -143,6 +136,8 @@ export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (
     let extendedPrisma = prisma.$extends({
       query: {
         $allModels: {
+          // JUST UNCOMMENT TO CHECK TYPES
+          // $allOperations: async (props: any) => {
           $allOperations: async (props: any) => {
             const { model, operation, args, query } = props
             const isTransaction = !!(props as any).__internalParams?.transaction
@@ -155,7 +150,10 @@ export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (
                 message: 'Successfull request',
                 meta: { model, operation, args, durationMs },
               })
-              const setFakeCreatedAtForAllRecordsPromise = setFakeCreatedAtForAllRecords(prisma as any, new Date())
+              const setFakeCreatedAtForAllRecordsPromise = setFakeCreatedAtForAllRecords(
+                prisma as PrismaClientInstanceInternal,
+                new Date()
+              )
               if (!isTransaction) {
                 await setFakeCreatedAtForAllRecordsPromise
               }
@@ -163,7 +161,10 @@ export const createPrismaThings = <TPrisma, TPrismaClient extends abstract new (
             } catch (error) {
               const durationMs = Date.now() - start
               logger.error({ tag: 'prisma:high', error, meta: { model, operation, args, durationMs } })
-              const setFakeCreatedAtForAllRecordsPromise = setFakeCreatedAtForAllRecords(prisma as any, new Date())
+              const setFakeCreatedAtForAllRecordsPromise = setFakeCreatedAtForAllRecords(
+                prisma as PrismaClientInstanceInternal,
+                new Date()
+              )
               if (!isTransaction) {
                 await setFakeCreatedAtForAllRecordsPromise
               }
