@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/ban-types, prefer-spread */
+/* eslint-disable prefer-spread */
 
 // WE CAN NOT IMPORT IT. IT IS LIB PACKAGE, NOT A PROJECT PACKAGE
 // JUST UNCOMMENT TO CHECK TYPES
 // import type { Prisma, PrismaClient } from '@prisma/client'
-import { type IBackOffOptions, backOff } from 'exponential-backoff'
+import { backOff, type IBackOffOptions } from 'exponential-backoff'
 
 // JUST UNCOMMENT TO CHECK TYPES
 // export const createPrismaThings = <
@@ -78,12 +78,12 @@ export const createPrismaThings = <
     }
   }
 
-  function RetryTransactions(options?: Partial<IBackOffOptions>) {
+  const RetryTransactions = (options?: Partial<IBackOffOptions>) => {
     return PrismaInternal.defineExtension((prisma: any) =>
       prisma.$extends({
         client: {
-          $transaction(...args: any) {
-            return backOff(() => prisma.$transaction.apply(prisma, args), {
+          $transaction: async (...args: any) => {
+            return await backOff(() => prisma.$transaction.apply(prisma, args), {
               retry: (e) => {
                 // Retry the transaction only if the error was due to a write conflict or deadlock
                 // See: https://www.prisma.io/docs/reference/api-reference/error-reference#p2034
@@ -100,8 +100,8 @@ export const createPrismaThings = <
   const createPrismaClient = () => {
     const prisma = new PrismaClientInternal({
       transactionOptions: {
-        maxWait: 10000,
-        timeout: 10000,
+        maxWait: 10_000,
+        timeout: 10_000,
         isolationLevel: PrismaInternal.TransactionIsolationLevel.Serializable,
       },
       log: [

@@ -1,5 +1,5 @@
 {
-  "extends": "svag-ts/configs/esm.json",
+  "extends": "svag-ts/configs/base.json",
   "include": ["src"],
   "compilerOptions": {
     "baseUrl": ".",

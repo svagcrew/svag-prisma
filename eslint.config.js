@@ -1,3 +1,3 @@
-import getSvagEslintNodeConfigs from 'svag-lint/configs/node.js'
+import getSvagEslintBaseConfigs from 'svag-lint/configs/base.js'
 /** @type {import('eslint').Linter.FlatConfig[]} */
-export default [...getSvagEslintNodeConfigs()]
+export default [...getSvagEslintBaseConfigs()]
