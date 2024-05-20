@@ -30,7 +30,7 @@
     "build": "svag-ts build",
     "start": "svag-ts start",
     "lint": "svag-lint lint",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "svag-jest test",
     "pgc": "prisma generate",
     "prepare": "husky"
   },
@@ -45,7 +45,7 @@
     "prettier": "^3.2.5",
     "rimraf": "^5.0.7",
     "svag-husky": "^0.1.39",
-    "svag-jest": "^0.1.35",
+    "svag-jest": "^0.1.36",
     "svag-lint": "^0.1.62",
     "svag-prettier": "^0.1.53",
     "svag-ts": "^0.1.58",

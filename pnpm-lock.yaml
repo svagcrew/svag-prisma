@@ -50,8 +50,8 @@ devDependencies:
     specifier: ^0.1.39
     version: 0.1.39(@types/node@20.12.12)
   svag-jest:
-    specifier: ^0.1.35
-    version: 0.1.35(@babel/core@7.24.5)(@types/node@20.12.12)(jest@30.0.0-alpha.4)
+    specifier: ^0.1.36
+    version: 0.1.36(@babel/core@7.24.5)(@types/node@20.12.12)(jest@30.0.0-alpha.4)
   svag-lint:
     specifier: ^0.1.62
     version: 0.1.62(@babel/plugin-syntax-flow@7.24.1)(@babel/plugin-transform-react-jsx@7.23.4)(@types/node@20.12.12)(jest@30.0.0-alpha.4)(prettier@3.2.5)
@@ -6049,29 +6049,6 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /svag-cli-utils@0.1.55(@types/node@20.12.12):
-    resolution: {integrity: sha512-gJTIDROConjkivhhNsGdh1MAy/VWTbSgNT+7LGVT0b2vDbZC5GyjRdrXpHdKyaGLOE2LROkFv3XV/2Ge6mEaZQ==}
-    dependencies:
-      dedent: 1.5.3
-      edit-json-file: 1.8.0
-      enquirer: 2.4.1
-      fast-glob: 3.3.2
-      js-yaml: 4.1.0
-      json-stable-stringify: 1.1.1
-      lodash: 4.17.21
-      omelette: 0.4.17
-      picocolors: 1.0.1
-      ts-node: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
-      typescript: 5.4.5
-      yargs: 17.7.2
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
-      - '@types/node'
-      - babel-plugin-macros
-    dev: true
-
   /svag-cli-utils@0.1.57(@types/node@20.12.12):
     resolution: {integrity: sha512-nPWFdvGrDJGDSdCaeaNr0lBlpT52jH3e9oPA6tKfG+ySsRg2Ti8xUOjBVmTdL23XJ9PbuqpTnzKoBbF85fzMGQ==}
     dependencies:
@@ -6112,14 +6089,14 @@ packages:
       - babel-plugin-macros
     dev: true
 
-  /svag-jest@0.1.35(@babel/core@7.24.5)(@types/node@20.12.12)(jest@30.0.0-alpha.4):
-    resolution: {integrity: sha512-Pibh6NSSDQxAX9cu8HNQYS9olILyZaaCH90c0wjUuM6JPz6fgDfpsYv/E7I/U0Du+v0GaplfyiQ2Z5GH/usjfQ==}
+  /svag-jest@0.1.36(@babel/core@7.24.5)(@types/node@20.12.12)(jest@30.0.0-alpha.4):
+    resolution: {integrity: sha512-eNOsdk8sDNuXUVG4WoDVaqMOaC2BO6nt6qpjfCtyNHExQgkZBNPFadpRVBUH5SyILpFYVvZGh4N4gIV00VgTJw==}
     hasBin: true
     dependencies:
       dedent: 1.5.3
       eslint: 9.2.0
       lodash: 4.17.21
-      svag-cli-utils: 0.1.55(@types/node@20.12.12)
+      svag-cli-utils: 0.1.57(@types/node@20.12.12)
       ts-jest: 29.1.2(@babel/core@7.24.5)(jest@30.0.0-alpha.4)(typescript@5.4.5)
       typescript: 5.4.5
       zod: 3.23.8
