@@ -21,7 +21,8 @@ export const createPrismaThings = <
   env,
   logger = console,
   overridePrismaClientOptions = {},
-  isTestDatabase = (env) => env?.HOST_ENV === 'test' && env?.DATABASE_URL?.includes('-test'),
+  isTestDatabase = (env) => env?.NODE_ENV === 'test' && env?.DATABASE_URL?.includes('-test'),
+  isClearableDb = (env) => env?.HOST_ENV === 'local' || env?.DATABASE_URL?.includes('-test'),
   logQueryParams = (env) => env?.HOST_ENV === 'local',
 }: {
   Prisma: TPrisma
@@ -30,6 +31,7 @@ export const createPrismaThings = <
   logger?: { info: (props: any) => any; error: (props: any) => any }
   overridePrismaClientOptions?: ConstructorParameters<TPrismaClient>[0]
   isTestDatabase?: (env: TEnv) => boolean
+  isClearableDb?: (env: TEnv) => boolean
   logQueryParams?: (env: TEnv) => boolean
 }) => {
   // JUST UNCOMMENT TO CHECK TYPES
@@ -185,9 +187,20 @@ export const createPrismaThings = <
     return extendedPrisma
   }
 
+  const clearDb = async (prisma: any) => {
+    if (!isClearableDb(env as any)) {
+      throw new Error('This operation is not allowed in this environment')
+    }
+    const modelsNames = getAllPrismaModelsNames(prisma)
+    for (const modelName of modelsNames) {
+      await prisma.$executeRawUnsafe(`TRUNCATE TABLE "${modelName}" CASCADE;`)
+    }
+  }
+
   return {
     createPrismaClient: createPrismaClient as () => InstanceType<TPrismaClient>,
     getAllPrismaModelsNames,
+    clearDb,
   }
 }
 
