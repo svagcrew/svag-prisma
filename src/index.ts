@@ -208,5 +208,5 @@ export type AppPrismaTypeGenerator<T extends ReturnType<typeof createPrismaThing
   ReturnType<T>
 export type CuttedPrismaTypeGenerator<T extends ReturnType<typeof createPrismaThings>['createPrismaClient']> = Omit<
   ReturnType<T>,
-  '$extends' | '$transaction' | '$disconnect' | '$connect'
+  '$extends' | '$transaction' | '$disconnect' | '$connect' | '$on' | '$use'
 >
